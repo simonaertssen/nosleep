@@ -4,14 +4,15 @@ is_power_adapter_connected() {
 	local power_adapter_connected=true
 	if [[ $(pmset -g adapter) =~ "No adapter attached" ]]
 	then
-		power_adapter_connected
+		power_adapter_connected=falses
 	fi
 
 	echo "$power_adapter_connected"
 }
 
 get_battery_level() {
-	local battery_level
+	local batter_level=$(pmset -g batt | grep -Eo "\d+%" | cut -d% -f1)
+	echo "$battery_level"
 }
 
 get_power_source () {
@@ -36,4 +37,9 @@ power_adapter_connected="$(is_power_adapter_connected)"
 if [ "$power_adapter_connected" = true ]
 then
 	echo "Connected"
+else
+	echo "Not connected"
 fi
+
+battery_level="$(get_battery_level)"
+echo "$battery_level"
