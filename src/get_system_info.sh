@@ -16,40 +16,30 @@ get_battery_level() {
 	echo "$battery_level"
 }
 
-get_number_of_displays() {
+is_external_display_connected() {
 	echo "Checking number of displays"
-	local number_displays=$(system_profiler SPDisplaysDataType | grep -c Resolution)
-	echo "$number_displays"
-}
-
-get_power_source () {
-	echo "Checking power source"
-	current_date=$(date)
-	echo "Today is $current_date"
-
-	OUTPUT=$(pmset -g ps)
-	echo "$OUTPUT"
-
-	local power_source
-	if [[ $OUTPUT =~ "AC Power" ]]
+	local external_display=false
+	if [[ $(system_profiler SPDisplaysDataType | grep -c Resolution) -gt 1 ]]
 	then
-  		power_source = "a"
-	elif [[ $OUTPUT =~ "Battery Power" ]]
-	then
-		power_source = "b"
+		external_display=true
 	fi
+	echo $(system_profiler SPDisplaysDataType | grep -c Resolution)
+	echo "$external_display"
 }
 
 power_adapter_connected="$(is_power_adapter_connected)"
-if [ "$power_adapter_connected" = true ]
-then
-	echo "Adapter is connected"
+if [ "$power_adapter_connected" == true ]; then
+	echo "Connected"
 else
-	echo "Adapter is not connected"
+	echo "Not connected"
 fi
 
 battery_level="$(get_battery_level)"
 echo $battery_level
 
-number_displays="$(get_number_of_displays)"
-echo $number_displays
+external_display="$(is_external_display_connected)"
+if [ "$external_display" == true ]; then
+	echo "External Display"
+else
+	echo "No External Display"
+fi
