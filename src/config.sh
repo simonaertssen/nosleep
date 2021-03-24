@@ -1,0 +1,4 @@
+#!/bin/bash
+
+DISPLAYSLEEP=1
+SLEEP=2
