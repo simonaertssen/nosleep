@@ -4,15 +4,22 @@ is_power_adapter_connected() {
 	local power_adapter_connected=true
 	if [[ $(pmset -g adapter) =~ "No adapter attached" ]]
 	then
-		power_adapter_connected=falses
+		power_adapter_connected=false
 	fi
 
 	echo "$power_adapter_connected"
 }
 
 get_battery_level() {
-	local batter_level=$(pmset -g batt | grep -Eo "\d+%" | cut -d% -f1)
+	echo "Checking battery level"
+	local battery_level=$(pmset -g batt | grep -Eo "\d+%" | cut -d% -f1)
 	echo "$battery_level"
+}
+
+get_number_of_displays() {
+	echo "Checking number of displays"
+	local number_displays=$(system_profiler SPDisplaysDataType | grep -c Resolution)
+	echo "$number_displays"
 }
 
 get_power_source () {
@@ -36,10 +43,13 @@ get_power_source () {
 power_adapter_connected="$(is_power_adapter_connected)"
 if [ "$power_adapter_connected" = true ]
 then
-	echo "Connected"
+	echo "Adapter is connected"
 else
-	echo "Not connected"
+	echo "Adapter is not connected"
 fi
 
 battery_level="$(get_battery_level)"
-echo "$battery_level"
+echo $battery_level
+
+number_displays="$(get_number_of_displays)"
+echo $number_displays
