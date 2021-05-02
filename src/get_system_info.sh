@@ -37,7 +37,6 @@ is_lid_closed() {
 is_external_keyboard_connected() {
 	local external_keyboard=false
 	OUTPUT=$(ioreg -p IOUSB -w0 | sed 's/[^o]*o //; s/@.*$//' | grep -v '^Root.*' | grep -c 'USB Receiver')
-	echo $OUTPUT
 	if [[ "$OUTPUT" -gt 0 ]]
 	then
 		external_keyboard=true

@@ -27,6 +27,23 @@ do
 	# Perform loop with some time off
     sleep 1
 
+	# Check if external keyboard is present:
+	external_keyboard_now="$(is_external_keyboard_connected)"
+	if [ "$external_keyboard_now" != "$external_keyboard_before" ]; then # Change keyboard layout
+		external_keyboard_before=$external_keyboard_now
+
+		TOOLBOX_PATH="~/Library/Preferences/com.apple.HIToolbox"
+		# $(defaults delete $TOOLBOX_PATH AppleSelectedInputSources) # Delete current layout
+
+		if [ "$external_keyboard_now" = true ]; then # Set keyboard to "USInternational-PC"
+			echo "USInternational-PC"
+			$(defaults write $TOOLBOX_PATH AppleSelectedInputSources -array '{ InputSourceKind = "Keyboard Layout"; "KeyboardLayout ID" = 15000; "KeyboardLayout Name" = "USInternational-PC"; }')
+		else # Set keyboard to "French - numerical"
+			echo "French - numerical"
+			$(defaults write $TOOLBOX_PATH AppleSelectedInputSources -array '{ InputSourceKind = "Keyboard Layout"; "KeyboardLayout ID" = 1111; "KeyboardLayout Name" = "French - numerical"; }')
+		fi
+	fi
+
 	# # Check if lid is closed:
 	# lid_closed_now="$(is_lid_closed)"
 	# if [ "$lid_closed_now" = false ]; then # Continue loop if lid is open
@@ -50,15 +67,5 @@ do
 	# xtrnl_display_before=$xtrnl_display_now
 
 	# echo "A change occured"
-
-	# Check if external keyboard is present:
-	external_keyboard_now="$(is_external_keyboard_connected)"
-	if [ "$external_keyboard_now" = false ]; then # No keyboard: native keys
-		continue
-	fi
-	if [ "$external_keyboard_now" == "$external_keyboard_before" ]; then # Keyboard: use 'Brits - PC' 
-		continue
-	fi
-	external_keyboard_before=$external_keyboard_now
 
 done
