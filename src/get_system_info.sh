@@ -35,13 +35,14 @@ is_lid_closed() {
 }
 
 is_external_keyboard_connected() {
-	local external_keyboard=true
-	OUTPUT=$(ioreg -r -k AppleClamshellState | grep '"AppleClamshellState"' | cut -f2 -d"=")
-	if [[ "$OUTPUT" == " No" ]]
+	local external_keyboard=false
+	OUTPUT=$(ioreg -p IOUSB -w0 | sed 's/[^o]*o //; s/@.*$//' | grep -v '^Root.*' | grep -c 'USB Receiver')
+	echo $OUTPUT
+	if [[ "$OUTPUT" -gt 0 ]]
 	then
-		lid_closed=false
+		external_keyboard=true
 	fi
-	echo "$lid_closed"
+	echo "$external_keyboard"
 }
 
 
