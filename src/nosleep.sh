@@ -32,15 +32,31 @@ do
 	if [ "$external_keyboard_now" != "$external_keyboard_before" ]; then # Change keyboard layout
 		external_keyboard_before=$external_keyboard_now
 
-		TOOLBOX_PATH="~/Library/Preferences/com.apple.HIToolbox"
-		# $(defaults delete $TOOLBOX_PATH AppleSelectedInputSources) # Delete current layout
+		TOOLBOX_PATH="~/Library/Preferences/com.apple.HIToolbox.plist"
 
 		if [ "$external_keyboard_now" = true ]; then # Set keyboard to "USInternational-PC"
 			echo "USInternational-PC"
-			$(defaults write $TOOLBOX_PATH AppleSelectedInputSources -array '{ InputSourceKind = "Keyboard Layout"; "KeyboardLayout ID" = 15000; "KeyboardLayout Name" = "USInternational-PC"; }')
+			defaults write $TOOLBOX_PATH AppleCurrentKeyboardLayoutInputSourceID "com.apple.keylayout.USInternational-PC"
+			defaults write $TOOLBOX_PATH AppleDefaultAsciiInputSource -dict InputSourceKind "Keyboard Layout" "KeyboardLayout ID" -int 15000 "KeyboardLayout Name" 'USInternational-PC'
+
+			defaults delete $TOOLBOX_PATH AppleEnabledInputSources
+
+			defaults write $TOOLBOX_PATH AppleEnabledInputSources -array '{ InputSourceKind = "Keyboard Layout"; "KeyboardLayout ID" = 15000; "KeyboardLayout Name" = "USInternational-PC"; }'
+			defaults write $TOOLBOX_PATH AppleInputSourceHistory -array '{ InputSourceKind = "Keyboard Layout"; "KeyboardLayout ID" = 15000; "KeyboardLayout Name" = "USInternational-PC"; }'
+			defaults write $TOOLBOX_PATH AppleSelectedInputSources -array '{ InputSourceKind = "Keyboard Layout"; "KeyboardLayout ID" = 15000; "KeyboardLayout Name" = "USInternational-PC"; }'
+
 		else # Set keyboard to "French - numerical"
 			echo "French - numerical"
-			$(defaults write $TOOLBOX_PATH AppleSelectedInputSources -array '{ InputSourceKind = "Keyboard Layout"; "KeyboardLayout ID" = 1111; "KeyboardLayout Name" = "French - numerical"; }')
+
+			defaults write $TOOLBOX_PATH AppleCurrentKeyboardLayoutInputSourceID "com.apple.keylayout.French-numerical"
+			defaults write $TOOLBOX_PATH AppleDefaultAsciiInputSource -dict InputSourceKind "Keyboard Layout" "KeyboardLayout ID" -int 1111 "KeyboardLayout Name" 'French - numerical'
+
+			defaults delete $TOOLBOX_PATH AppleEnabledInputSources
+
+			defaults write $TOOLBOX_PATH AppleEnabledInputSources -array '{ InputSourceKind = "Keyboard Layout"; "KeyboardLayout ID" = 1111; "KeyboardLayout Name" = "French - numerical"; }'
+			defaults write $TOOLBOX_PATH AppleInputSourceHistory -array '{ InputSourceKind = "Keyboard Layout"; "KeyboardLayout ID" = 1111; "KeyboardLayout Name" = "French - numerical"; }'
+			defaults write $TOOLBOX_PATH AppleSelectedInputSources -array '{ InputSourceKind = "Keyboard Layout"; "KeyboardLayout ID" = 1111; "KeyboardLayout Name" = "French - numerical"; }'
+
 		fi
 	fi
 
