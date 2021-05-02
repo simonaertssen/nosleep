@@ -12,7 +12,7 @@ reset_settings() {
 	# sudo pmset -b disablesleep 0
     # sudo pmset -b sleep $B_SLEEP
     # sudo pmset -b displaysleep 1
-    echo "$(date) Program Stop"# >> $log
+    echo "$(date) Program Stop" >> $log
     exit
 }
 

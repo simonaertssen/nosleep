@@ -33,3 +33,15 @@ is_lid_closed() {
 	fi
 	echo "$lid_closed"
 }
+
+is_external_keyboard_connected() {
+	local external_keyboard=true
+	OUTPUT=$(ioreg -r -k AppleClamshellState | grep '"AppleClamshellState"' | cut -f2 -d"=")
+	if [[ "$OUTPUT" == " No" ]]
+	then
+		lid_closed=false
+	fi
+	echo "$lid_closed"
+}
+
+
